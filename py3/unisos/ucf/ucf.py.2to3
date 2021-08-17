@@ -1,0 +1,105 @@
+RefactoringTool: Skipping optional fixer: buffer
+RefactoringTool: Skipping optional fixer: idioms
+RefactoringTool: Skipping optional fixer: set_literal
+RefactoringTool: Skipping optional fixer: ws_comma
+RefactoringTool: Refactored ./ucf/py3/unisos/ucf/ucf.py
+RefactoringTool: Files that were modified:
+RefactoringTool: ./ucf/py3/unisos/ucf/ucf.py
+--- ./ucf/py3/unisos/ucf/ucf.py	(original)
++++ ./ucf/py3/unisos/ucf/ucf.py	(refactored)
+@@ -108,7 +108,7 @@
+     """
+     def __setattr__(self, attr, value):
+         if hasattr(self, attr):
+-            raise ValueError, 'Attribute %s already has a value and so cannot be written to' % attr
++            raise ValueError('Attribute %s already has a value and so cannot be written to' % attr)
+ 
+         self.__dict__[attr] = value
+         
+@@ -133,7 +133,7 @@
+     var = IIM_ParamScope.TargetParam
+     if var == IIM_ParamScope.IimGeneralParam:
+     """
+-    enums = dict(zip(sequential, range(len(sequential))), **named)
++    enums = dict(list(zip(sequential, list(range(len(sequential))))), **named)
+     return type('Enum', (), enums)
+ 
+ """
+@@ -147,7 +147,7 @@
+     var = IIM_ParamScope.TargetParam
+     if var == IIM_ParamScope.IimGeneralParam:
+     """
+-    Enums = dict(zip(sequential, range(len(sequential))), **named)
++    Enums = dict(list(zip(sequential, list(range(len(sequential))))), **named)
+     return type('Enum', (), Enums)
+ 
+ 
+@@ -302,12 +302,12 @@
+     fn = FUNC_strToFunc( info.function )
+ 
+     # Unpack function's arg count, arg names, arg defaults
+-    code = fn.func_code
++    code = fn.__code__
+     argcount = code.co_argcount
+     
+     argnames = code.co_varnames[:argcount]
+-    fn_defaults = fn.func_defaults or list()
+-    argdefs = dict(zip(argnames[-len(fn_defaults):], fn_defaults))
++    fn_defaults = fn.__defaults__ or list()
++    argdefs = dict(list(zip(argnames[-len(fn_defaults):], fn_defaults)))
+     #TM_here( info.function + ' -- '+ str(argcount) + str(argnames) + str(fn_defaults) + str(argdefs) )
+ 
+     return argdefs
+@@ -323,7 +323,7 @@
+ 
+ def chunks(l, n):
+     """Yield successive n-sized chunks from l."""
+-    for i in xrange(0, len(l), n):
++    for i in range(0, len(l), n):
+         yield l[i:i+n]
+ 
+ """
+@@ -637,18 +637,18 @@
+ ** TODO ============    Returns length of string '()' not the actual args.
+     """
+     # Unpack function's arg count, arg names, arg defaults
+-    code = fn.func_code
++    code = fn.__code__
+     argcount = code.co_argcount
+ 
+     argnames = code.co_varnames[:argcount]
+-    fn_defaults = fn.func_defaults or list()
+-    argdefs = dict(zip(argnames[-len(fn_defaults):], fn_defaults))
+-
+-    positional = map(format_arg_value, zip(argnames, v))
++    fn_defaults = fn.__defaults__ or list()
++    argdefs = dict(list(zip(argnames[-len(fn_defaults):], fn_defaults)))
++
++    positional = list(map(format_arg_value, list(zip(argnames, v))))
+     defaulted = [format_arg_value((a, argdefs[a]))
+        for a in argnames[len(v):] if a not in k]
+-    nameless = map(repr, v[argcount:])
+-    keyword = map(format_arg_value, k.items())
++    nameless = list(map(repr, v[argcount:]))
++    keyword = list(map(format_arg_value, list(k.items())))
+     args = positional + defaulted + nameless + keyword
+ 
+     return   len(args[0])
+@@ -715,7 +715,7 @@
+ """
+ def listPrintItems(inList):
+     for each in inList:
+-        print each
++        print(each)
+ 
+ """
+ *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Func             ::  oDict    [[elisp:(org-cycle)][| ]]
+@@ -761,7 +761,7 @@
+ def DIR_ensure(file_path):
+     directory = os.path.dirname(file_path)
+     if not os.path.exists(directory):
+-        try: os.makedirs(directory, 0777 )
++        try: os.makedirs(directory, 0o777 )
+         except OSError: pass
+ 
+ ####+BEGIN: bx:icm:python:func :funcName "DIR_ensureDir" :funcType "void" :retType "bool" :deco "" :argsList "dirPath"
