@@ -593,7 +593,7 @@ If it is called by an intermediate function such as EH_problem, then frameNu is 
     BUG: does not work outside of the main module with PY2. Needs PY3 testing.
     """
 
-    frame,filename,line_number,function_name,lines,index = inspect.stack()[frameNu+1]
+    frame,filename,line_number,function_name,lines,index = inspect.stack()[frameNu]
     # print(frame,filename,line_number,function_name,lines,index)
 
     modName = "." + inspect.getmodulename(filename)
@@ -607,20 +607,17 @@ If it is called by an intermediate function such as EH_problem, then frameNu is 
         if func:
             return func
 
-    modName = "." + inspect.getmodulename(filename)
-
     try:
-        mod = importlib.import_module(modName, package="bisos")
+        mod = importlib.import_module(modName, package="unisos")
     except ModuleNotFoundError:
         mod=None
-    mod = importlib.import_module(modName, package="unisos")
     if mod:
         func = getattr(mod, function_name, None)
         if func:
             return func
 
 
-    print("UCF-Problem: Missing mod and func")
+    print("UCF-Problem: Missing mod and func. " + modName)
     return None
 
 
