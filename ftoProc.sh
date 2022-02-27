@@ -42,8 +42,8 @@ _CommentEnd_
 # {{{ DBLOCK-leavesList
 leavesList="
 py2
-py3
 py2to3
+py3
 "
 # }}} DBLOCK-leavesList
 ####+END:
